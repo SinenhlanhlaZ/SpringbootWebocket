@@ -16,17 +16,14 @@ public class WebsocketConfig implements WebSocketConfigurer {
 
     private final StockService stockService;
 
-    private final ObjectMap map;
-
     @Autowired
-    public WebsocketConfig(StockService stockService, ObjectMap map){
+    public WebsocketConfig(StockService stockService){
         this.stockService = stockService;
-        this.map = map;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry){
-        registry.addHandler(new WebSocketHandler(stockService, map), "/ws")
+        registry.addHandler(new WebSocketHandler(stockService), "/stock")
                 .addInterceptors(new HttpSessionHandshakeInterceptor())
                 .setAllowedOrigins("*");
     }

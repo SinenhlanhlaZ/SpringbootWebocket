@@ -11,12 +11,10 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 public class WebSocketHandler extends AbstractWebSocketHandler {
 
     private final StockService stockService;
-    private final ObjectMap map;
 
     @Autowired
-    public WebSocketHandler(StockService stockService, ObjectMap map){
+    public WebSocketHandler(StockService stockService){
         this.stockService = stockService;
-        this.map = map;
     }
 
     @Override
@@ -31,6 +29,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
                 // Send Stock details to client
                 if(stock != null){
+                    ObjectMap map = new ObjectMap();
                     session.sendMessage(new TextMessage(map.serializeStock(stock)));
                 }
                 else{
