@@ -1,5 +1,6 @@
 package com.sinezondi.websocket.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sinezondi.websocket.core.dto.Stock;
 import com.sinezondi.websocket.core.service.StockService;
@@ -30,7 +31,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
                 // Send Stock details to client
                 if(stock != null){
                     String stockDetails = stock.toString();
-                    session.sendMessage(new TextMessage(stockDetails));
+                    session.sendMessage(new TextMessage(serializeStock(stock)));
                 }
                 else{
                     session.sendMessage(new TextMessage("Stock ID: "+stockId+" not found"));
@@ -42,5 +43,9 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
         }
     }
 
+    public String serializeStock(Stock stock) throws JsonProcessingException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(stock);
+    }
 
 }
