@@ -1,9 +1,8 @@
 package com.sinezondi.websocket.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sinezondi.websocket.core.dto.Stock;
 import com.sinezondi.websocket.core.service.StockService;
+import com.sinezondi.websocket.util.ObjectMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -12,10 +11,12 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 public class WebSocketHandler extends AbstractWebSocketHandler {
 
     private final StockService stockService;
+    private final ObjectMap map;
 
     @Autowired
-    public WebSocketHandler(StockService stockService){
+    public WebSocketHandler(StockService stockService, ObjectMap map){
         this.stockService = stockService;
+        this.map = map;
     }
 
     @Override
@@ -30,8 +31,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
                 // Send Stock details to client
                 if(stock != null){
-                    String stockDetails = stock.toString();
-                    session.sendMessage(new TextMessage(serializeStock(stock)));
+                    session.sendMessage(new TextMessage(map.serializeStock(stock)));
                 }
                 else{
                     session.sendMessage(new TextMessage("Stock ID: "+stockId+" not found"));
@@ -42,10 +42,4 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
             e.printStackTrace();
         }
     }
-
-    public String serializeStock(Stock stock) throws JsonProcessingException{
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(stock);
-    }
-
 }
