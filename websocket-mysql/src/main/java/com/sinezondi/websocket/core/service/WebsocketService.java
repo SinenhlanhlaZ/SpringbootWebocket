@@ -1,7 +1,6 @@
 package com.sinezondi.websocket.core.service;
 
 import com.sinezondi.websocket.core.dto.Stock;
-import com.sinezondi.websocket.handler.WebSocketHandler;
 import com.sinezondi.websocket.util.ObjectMap;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -34,7 +33,7 @@ public class WebsocketService {
 
             if(allSessions.containsKey(stock.getStockId())){
                 WebSocketSession session = allSessions.get(stock.getStockId());
-                session.sendMessage(new TextMessage(stock.toString()));
+                session.sendMessage(new TextMessage(new ObjectMap().serializeStock(stock)));
             }
             else{
                 System.out.println("No session was found");

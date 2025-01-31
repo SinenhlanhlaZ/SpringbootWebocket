@@ -3,16 +3,13 @@ package com.sinezondi.websocket.handler;
 import com.sinezondi.websocket.core.dto.Stock;
 import com.sinezondi.websocket.core.service.StockService;
 import com.sinezondi.websocket.core.service.WebsocketService;
+import com.sinezondi.websocket.util.ObjectMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class WebSocketHandler extends AbstractWebSocketHandler {
@@ -41,7 +38,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
                 // Send Stock details to client
                 if(stock != null){
-                    webSocketSession.sendMessage(new TextMessage(stock.toString()));
+                    webSocketSession.sendMessage(new TextMessage(new ObjectMap().serializeStock(stock)));
                 }
                 else{
                     webSocketSession.sendMessage(new TextMessage("Stock ID: "+stockId+" not found"));
